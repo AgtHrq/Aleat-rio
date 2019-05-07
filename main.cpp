@@ -12,20 +12,16 @@
 #define TAM_BLOCO 100
 #define PASSO	10
 
-#define NORTE  0
-#define LESTE  1
-#define SUL    2
-#define OESTE  3
-
 //GLOBALS--------------------------------------------
 GLuint chao;
 GLuint parede;
-GLuint portal;
+GLuint porta;
+GLuint ceutarde;
 GLuint ceumanha;
 GLuint menu;
 GLuint ceunoite;
-GLuint menu2;
-GLuint win;
+GLuint ganhou;
+GLuint perdeu;
 
 //----------------------Variáveis Teste--------
 
@@ -41,9 +37,8 @@ GLint valor_especular_material = 60; //brilho especular
 GLfloat jog_x= 713, jog_z= 101 ;
 GLfloat mov_x=PASSO, mov_z=0;
 GLint angulo=0;
-GLint wire = 0;
 GLint inicia = 0;
-GLint refTempo = 500;
+GLint refTempo = 8000;
 GLint LookX = 0;
 GLint LookZ = 0;
 
@@ -152,6 +147,74 @@ void desenhaCubo(){
     
 }
 
+void desenhaPorta(){
+    
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture( GL_TEXTURE_2D, porta);
+
+    // Desenha um cubo
+
+    glBegin(GL_QUADS);			// Face posterior
+
+    glNormal3f(0.0, 0.0, 1.0);	// Normal da face
+    glTexCoord2d(0.0,0.0);
+    glVertex3f(50.0, 50.0, 50.0);
+    glTexCoord2d(1.0,0.0);
+    glVertex3f(-50.0, 50.0, 50.0);
+    glTexCoord2d(1.0,1.0);
+    glVertex3f(-50.0, -50.0, 50.0);
+    glTexCoord2d(0.0,1.0);
+    glVertex3f(50.0, -50.0, 50.0);
+
+    glEnd();
+    glPushMatrix();
+    glRotatef(90.0f, 0.0f,0.0f,1.0f);
+    
+    glBegin(GL_QUADS);			// Face frontal
+    glRotatef(90.0f, 0.0f,0.0f,1.0f);
+    glNormal3f(0.0, 0.0, -1.0); 	// Normal da face
+    glTexCoord2d(0.0,0.0);
+    glVertex3f(50.0, 50.0, -50.0);
+    glTexCoord2d(1.0,0.0);
+    glVertex3f(50.0, -50.0, -50.0);
+    glTexCoord2d(1.0,1.0);
+    glVertex3f(-50.0, -50.0, -50.0);
+    glTexCoord2d(0.0,1.0);
+    glVertex3f(-50.0, 50.0, -50.0);
+    glEnd();
+    glPopMatrix();
+
+
+    glBegin(GL_QUADS);			// Face lateral esquerda
+
+    glNormal3f(-1.0, 0.0, 0.0); 	// Normal da face
+    glTexCoord2d(0.0,0.0);
+    glVertex3f(-50.0, 50.0, 50.0);
+    glTexCoord2d(1.0,0.0);
+    glVertex3f(-50.0, 50.0, -50.0);
+    glTexCoord2d(1.0,1.0);
+    glVertex3f(-50.0, -50.0, -50.0);
+    glTexCoord2d(0.0,1.0);
+    glVertex3f(-50.0, -50.0, 50.0);
+    glEnd();
+
+    glPushMatrix();
+    glRotatef(90.0f, 1.0f,0.0f,0.0f);
+    glBegin(GL_QUADS);			// Face lateral direita
+
+    glNormal3f(1.0, 0.0, 0.0);	// Normal da face
+    glTexCoord2d(0.0,0.0);
+    glVertex3f(50.0, 50.0, 50.0);
+    glTexCoord2d(1.0,0.0);
+    glVertex3f(50.0, -50.0, 50.0);
+    glTexCoord2d(1.0,1.0);
+    glVertex3f(50.0, -50.0, -50.0);
+    glTexCoord2d(0.0,1.0);
+    glVertex3f(50.0, 50.0, -50.0);
+    glEnd();
+    glPopMatrix();
+}
+
 
 
 //Desenha uma esfera
@@ -159,10 +222,17 @@ void DesenhaEsfera(float raio, double lat, double longe)
 {
     glRotatef(90.0f, 0.0f, 1.0f, 0.0f); // tentando evitar "marcas" na esfera.
     //glRotatef(90.0f, 0.0f, 0.0f, 1.0f); // tentando evitar "marcas" na esfera.
-    glEnable(GL_TEXTURE_2D);
-    if(refTempo >= 250){
+    
+    
+    if(refTempo >= 6000){
+        glEnable(GL_TEXTURE_2D);
         glBindTexture( GL_TEXTURE_2D, ceumanha);
+    }
+    else if(refTempo >= 3000){
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture( GL_TEXTURE_2D, ceutarde);
     }else{
+        glEnable(GL_TEXTURE_2D);
         glBindTexture( GL_TEXTURE_2D, ceunoite);
     }
     
@@ -179,42 +249,92 @@ void DesenhaEsfera(float raio, double lat, double longe)
 
 }
 
+void MouseClick (int button, int state, int x, int y)
+{
+
+        switch (button)
+    {
+        case GLUT_LEFT_BUTTON: exit(0);
+                               break;
+    }
+      
+    
+}
+
 
 
 void display(void)
 {
+    
+
     switch(inicia)
     {
+        
     case 0:
+           
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// limpa os pixels da tela
+            glLoadIdentity();// Carrega a identidade
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// limpa os pixels da tela
-        glLoadIdentity();// Carrega a identidade
+            glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
+            glBindTexture( GL_TEXTURE_2D, menu);// Define qual textura queremos aplicar.
 
-        glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
-        glBindTexture( GL_TEXTURE_2D, menu);// Define qual textura queremos aplicar.
+            glPushMatrix(); //
+            gluLookAt(-60,0,750,-60,0,0,0,1,0); // (vis�o do personagem)
+            glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            glBegin(GL_QUADS);// Carrega nossa textura 1000 x 1600.
+            glTexCoord2d(0.0,0.0);
+            glVertex3f(-800.0,-800.0,0.0);
+            glTexCoord2d(1.0,0.0);
+            glVertex3f(-800.0,800.0,0.0);
+            glTexCoord2d(1.0,1.0);
+            glVertex3f(800.0,800.0,0.0);
+            glTexCoord2d(0.0,1.0);
+            glVertex3f(800.0,-800.0,0.0);
 
-        glPushMatrix(); //
-        gluLookAt(-60,0,750,-60,0,0,0,1,0); // (vis�o do personagem)
-        glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-        glBegin(GL_QUADS);// Carrega nossa textura 1000 x 1600.
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(-800.0,-800.0,0.0);
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(-800.0,800.0,0.0);
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(800.0,800.0,0.0);
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(800.0,-800.0,0.0);
+            glEnd();
 
-        glEnd();
-        glutSwapBuffers();
-        glFlush();
-        break;
+            glutSwapBuffers();
+            glFlush();
+            break;
 
     case 1:
+    if(refTempo >= 6000){
+        glClearColor(0.3, 0.6, 0.8, 0.0);
+    }
+    else if(refTempo >= 3000){
+        
+        glClearColor(0.9, 0.6, 0.2, 1.0);
+
+    }else{
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+    }
         
         if(refTempo == 0){
-        exit(0);
+            
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// limpa os pixels da tela
+            glLoadIdentity();// Carrega a identidade
+
+            glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
+            glBindTexture( GL_TEXTURE_2D, perdeu);// Define qual textura queremos aplicar.
+
+            glPushMatrix(); //
+            gluLookAt(-60,0,750,-60,0,0,0,1,0); // (vis�o do personagem)
+            glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+            glBegin(GL_QUADS);// Carrega nossa textura 1000 x 1600.
+            glTexCoord2d(0.0,0.0);
+            glVertex3f(-800.0,-800.0,0.0);
+            glTexCoord2d(1.0,0.0);
+            glVertex3f(-800.0,800.0,0.0);
+            glTexCoord2d(1.0,1.0);
+            glVertex3f(800.0,800.0,0.0);
+            glTexCoord2d(0.0,1.0);
+            glVertex3f(800.0,-800.0,0.0);
+
+            glEnd();
+
+            glutSwapBuffers();
+            glFlush();
+
         }else
         refTempo = refTempo - 1;
         printf("%d\n", refTempo);
@@ -260,7 +380,7 @@ void display(void)
 
         glPopMatrix();
 
-        // Textura - WIN:
+        // Textura - Ganhou:
         if(((LookX>=2100) && (LookX<=2130)) && ((LookZ >= 2450)&&(LookZ<=2480)))
         {
 
@@ -269,7 +389,7 @@ void display(void)
             glLoadIdentity();// Carrega a identidade
 
             glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
-            glBindTexture( GL_TEXTURE_2D, win);// Define qual textura queremos aplicar.
+            glBindTexture( GL_TEXTURE_2D, ganhou);// Define qual textura queremos aplicar.
 
             glPushMatrix(); //
             gluLookAt(-60,0,750,-60,0,0,0,1,0); // (vis�o do personagem)
@@ -322,16 +442,14 @@ void display(void)
                     {
                        DesenhaEsfera(2850.0,3,3);
 
-                    }
-
-                    else
+                    }else if(casa==2){
+                        desenhaPorta();
+                    }else
                     {
-                        if(wire) glutWireCube(TAM_BLOCO);
-                        else desenhaCubo(); // Desenha as "paredes" do labirinto.
+                        desenhaCubo(); // Desenha as "paredes" do labirinto.
                     }
 
                     glPopMatrix();
-
 
                 }
             }//for
@@ -341,35 +459,10 @@ void display(void)
 
         glutSwapBuffers();
         break;
-    case 2:
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// limpa os pixels da tela
-        glLoadIdentity();// Carrega a identidade
-
-        glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
-        glBindTexture( GL_TEXTURE_2D, menu2);// Define qual textura queremos aplicar.
-
-        glPushMatrix(); //
-        gluLookAt(-60,0,750,-60,0,0,0,1,0); // (vis�o do personagem)
-        glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-        glBegin(GL_QUADS);// Carrega nossa textura 1000 x 1600.
-        glTexCoord2d(0.0,0.0);
-        glVertex3f(-797.0,-797.0,0.0);
-        glTexCoord2d(1.0,0.0);
-        glVertex3f(-797.0,797.0,0.0);
-        glTexCoord2d(1.0,1.0);
-        glVertex3f(797.0,797.0,0.0);
-        glTexCoord2d(0.0,1.0);
-        glVertex3f(797.0,-797.0,0.0);
-
-        glEnd();
-        glutSwapBuffers();
-        glFlush();
-        break;
-
 
     }
 }
+
 
 
 
@@ -379,11 +472,11 @@ void Inicializa(void){
 
 glShadeModel(GL_SMOOTH); //especifica a técnica de colorização
 
-glClearColor(0.9, 0.6, 0.2, 1.0);
 
-// Define a reflet�ncia do material
+
+// Define a refletancia do material
 	glMaterialfv(GL_FRONT,GL_SPECULAR, matriz_especular);
-	// Define a concentra��o do brilho
+	// Define a concentracao do brilho
 	glMateriali(GL_FRONT,GL_SHININESS,valor_especular_material);
 
 glLightfv(GL_LIGHT0, GL_POSITION, posicao_fonte_de_luz);
@@ -451,27 +544,18 @@ GLuint CarregarTextura( const char * filename, int width, int height )
 void Teclado (unsigned char chave, int x, int y){
 
     switch (chave){
+    
+    case 'c':
+    case 'C':
 
-        case  27:
-        exit(0);
-        break; //ESC -> encerra aplicativo...
+    inicia = 1;
+    glutPostRedisplay();
+    break;
 
-    case 'w':
-    case 'W':
-        wire =!wire;
-        glutPostRedisplay();
-        break;
+    case  27:
 
-    case 'h':
-    case 'H':
-        inicia=2;
-        glutPostRedisplay();
-        break;
-
-    case 32:
-        inicia=1;
-        glutPostRedisplay();
-        break;
+    exit(0);
+    break; //ESC -> encerra aplicativo...
 
     }
 
@@ -585,16 +669,17 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(100,100);
 	glutCreateWindow("Labirinto Projeto");
     glutFullScreen();
-    chao = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/areia.bmp", 1600, 1600); // Carrega primeira textura (Ch�o).
-    parede = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/papel_parede.bmp", 1000, 708);// Carrrega segunda textura (Parede).
-    portal = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/portal.bmp", 2560, 1920); // Carrega terceira textura (Porta)
-    ceumanha = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/ceu.bmp", 8000, 2000); // Carrega terceira textura (Porta)
-    menu = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/menu1espelhado.bmp", 1280, 799); // Carrega terceira textura (Porta)
-    ceunoite = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/ceu3.bmp", 6000, 5000);
-    menu2 = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/menu2.bmp", 1278, 797); // Carrega terceira textura (Porta)
-    win = CarregarTextura( "/home/augusto/Downloads/opengl_hello_world/obj/winCerto.bmp", 1278, 797);
+    chao = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/areia.bmp", 1600, 1600); // Carrega primeira textura (Ch�o).
+    parede = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/papel_parede.bmp", 1000, 708);// Carrrega segunda textura (Parede).
+    porta = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/porta.bmp", 900, 600); // Carrega terceira textura (Porta)
+    ceutarde = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu.bmp", 8000, 2000); // Carrega terceira textura (Porta)
+    menu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/menulabirinto.bmp", 615, 300); // Carrega terceira textura (Porta)
+    ceunoite = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu3.bmp", 6000, 5000);
+    ganhou = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ganhou.bmp", 4000, 2200);
+    perdeu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/perdeu.bmp", 480, 360);
+    ceumanha = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceumanha2.bmp", 300, 300);
     
-    if(chao==0 || parede == 0)
+    if(chao==0 || parede == 0 || porta == 0 || ceutarde == 0 || menu == 0 || ceunoite == 0 || ganhou == 0)
     {
         printf("Erro ao carregar Imagem\n");
     }
@@ -609,6 +694,8 @@ int main(int argc, char **argv)
     glutKeyboardFunc(Teclado);
     glutSpecialFunc(Special_Function);
     glutIdleFunc(Move);
+    glutMouseFunc(MouseClick);
+    
    
 
 
