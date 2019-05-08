@@ -13,6 +13,7 @@
 #define PASSO	10
 
 //GLOBALS--------------------------------------------
+
 GLuint chao;
 GLuint parede;
 GLuint porta;
@@ -153,7 +154,7 @@ void desenhaPorta(){
     glEnable(GL_TEXTURE_2D);
     glBindTexture( GL_TEXTURE_2D, porta);
 
-    // Desenha um cubo
+    //DESENHA UM CUBO
 
     glBegin(GL_QUADS);			// Face posterior
 
@@ -218,11 +219,10 @@ void desenhaPorta(){
 
 
 
-//Desenha uma esfera
+
 void DesenhaEsfera(float raio, double lat, double longe)
 {
-    glRotatef(90.0f, 0.0f, 1.0f, 0.0f); // tentando evitar "marcas" na esfera.
-    //glRotatef(90.0f, 0.0f, 0.0f, 1.0f); // tentando evitar "marcas" na esfera.
+    glRotatef(90.0f, 0.0f, 1.0f, 0.0f); // MASCARANDO AS MARCAS NA ESFERA
     
     
     if(refTempo >= 6000){
@@ -276,7 +276,7 @@ void display(void)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// limpa os pixels da tela
             glLoadIdentity();// Carrega a identidade
 
-            glEnable(GL_TEXTURE_2D); // Ativa a aplica��o de textura.
+            glEnable(GL_TEXTURE_2D); // Ativa a aplicação de textura.
             glBindTexture( GL_TEXTURE_2D, menu);// Define qual textura queremos aplicar.
 
             glPushMatrix(); //
@@ -347,23 +347,24 @@ void display(void)
 
         glLoadIdentity();// Carrega a identidade
 
-        gluLookAt(jog_x,25,jog_z, jog_x+mov_x,25,jog_z+mov_z, 0,1,0); // (vis�o do personagem)
-        // Coordenadas X e Y que a camera t� ap�s se mover.
+        gluLookAt(jog_x,25,jog_z, jog_x+mov_x,25,jog_z+mov_z, 0,1,0); // (visão do personagem)
+        // Coordenadas X e Y que a camera ta após se mover.
         LookX = (int) (jog_x+mov_x);
         LookZ = (int) (jog_z+mov_z);
+
         //printf's permitem ver tais coordenadas, para posteriormente aplicar textura:
         printf("X = %d\n", LookX);
         printf("Z = %d\n", LookZ);
 
 
-        //DesenhaEsfera(10000.0);
-        glPushMatrix(); //
+        
+        glPushMatrix(); 
         glEnable(GL_TEXTURE_2D);
         glBindTexture( GL_TEXTURE_2D, chao);
-        //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_verde);
+        
 
 
-        //glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+        
         glBegin ( GL_QUADS);
 
         glTexCoord2d(0.0,0.0);
@@ -472,24 +473,32 @@ void Inicializa(void){
 
     
 
-glShadeModel(GL_SMOOTH); //especifica a técnica de colorização
+glShadeModel(GL_SMOOTH); //HABILITA O MODELO DE COLORIZAÇÃO DO GOURAUD, A COR RESULTANTE É INTERPOLADA NA FACE
 
 
 
-// Define a refletancia do material
+
+    // DEFINE A REFLETÂNCIA DO MATERIAL
 	glMaterialfv(GL_FRONT,GL_SPECULAR, matriz_especular);
-	// Define a concentracao do brilho
+	
+    // DEFINE A CONCENTRAÇÃO DO BRILHO DO MATERIAL
 	glMateriali(GL_FRONT,GL_SHININESS,valor_especular_material);
-
+    
+    //ATIVA A ILUMINAÇÃO AMBIENTE
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-
+    
+    //POSICIONA A FONTE DE LUZ
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_fonte_de_luz);
+    
+    //DEFINE OS PARAMETROS DA LUZ DE NÚMERO ZERO
     glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_branca);
     glLightfv(GL_LIGHT0, GL_SPECULAR, luz_branca);
     glLightfv(GL_LIGHT0, GL_AMBIENT, lmodel_ambient);
 
-glEnable(GL_LIGHTING); //liga a iluminação
-glEnable(GL_LIGHT0);
+    //HABILITA O USO DA ILUMINAÇÃO
+    glEnable(GL_LIGHTING);
+    //LIGA A LUZ DE NÚMERO ZERO
+    glEnable(GL_LIGHT0);
 
 //Especifica sistema de coordenadas de projecao
     glMatrixMode(GL_PROJECTION);
@@ -520,18 +529,18 @@ GLuint CarregarTextura( const char * filename, int width, int height )
     unsigned char * data;
     FILE * file;
 
-//The following code will read in our RAW file
-    file = fopen( filename, "rb" );  //We need to open our file
-    if ( file == NULL ) return 0;  //If our file is empty, set our texture to empty
+    //O CDG ABAIXO LE O ARQUIVO
+    file = fopen( filename, "rb" );  //ABRE O ARQUIVO
+    if ( file == NULL ) return 0;  //RETORNA 0 CASO VAZIO
 
 
-    data = (unsigned char *)malloc( width * height * 3 ); //assign the necessary memory for the texture
+    data = (unsigned char *)malloc( width * height * 3 ); //ALOCA A MEMÓRIA NECESSÁRIA PARA A TEXTURA
 
 
-    fread( data, width * height * 3, 1, file );  //read in our file
-    fclose( file ); //close our file, no point leaving it open
+    fread( data, width * height * 3, 1, file );  //LÊ O ARQUIVO
+    fclose( file ); //FECHA O ARQUIVO
 
-    glGenTextures( 1, &texture ); //then we need to tell OpenGL that we are generating a texture
+    glGenTextures( 1, &texture ); //INFORMA AO OPENGL QUE ESTAMOS GENERANDO UMA TEXTURA
     glBindTexture( GL_TEXTURE_2D, texture ); //now we bind the texture that we are working with
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
@@ -540,8 +549,8 @@ GLuint CarregarTextura( const char * filename, int width, int height )
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-    free( data ); //free the texture
-    return texture; //return the texture data
+    free( data ); //LIBERA A TEXTURA(DESALOCA)
+    return texture; //RETORNA A TEXTURA
 }
 
 void Teclado (unsigned char chave, int x, int y){
@@ -665,6 +674,7 @@ void Move(void)
 //---------------------------------------------------------------
 int main(int argc, char **argv)
 {
+    // INICIAÇÃO DA TELA
 	std::clog << "Begin...\n";
 
 	glutInit(&argc,argv);
@@ -672,16 +682,20 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(100,100);
 	glutCreateWindow("Labirinto Projeto");
     glutFullScreen();
-    chao = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/areia.bmp", 1600, 1600); // Carrega primeira textura (Ch�o).
-    parede = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/papel_parede.bmp", 1000, 708);// Carrrega segunda textura (Parede).
-    porta = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/porta.bmp", 900, 600); // Carrega terceira textura (Porta)
-    ceutarde = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu.bmp", 8000, 2000); // Carrega terceira textura (Porta)
-    menu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/menulabirinto.bmp", 615, 300); // Carrega terceira textura (Porta)
+
+    //CARREGA TEXTURAS
+
+    chao = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/areia.bmp", 1600, 1600);
+    parede = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/papel_parede.bmp", 1000, 708);
+    porta = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/porta.bmp", 900, 600); 
+    ceutarde = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu.bmp", 8000, 2000); 
+    menu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/menulabirinto.bmp", 615, 300); 
     ceunoite = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceunoite3.bmp", 3888, 2592);
     ganhou = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ganhou.bmp", 4000, 2200);
     perdeu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/perdeu.bmp", 480, 360);
     ceumanha = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceumanha2.bmp", 300, 300);
     
+    //NÃO CARREGOU/CARREGOU
     if(chao==0 || parede == 0 || porta == 0 || ceutarde == 0 || menu == 0 || ceunoite == 0 || ganhou == 0)
     {
         printf("Erro ao carregar Imagem\n");
@@ -691,12 +705,25 @@ int main(int argc, char **argv)
         printf("Carregaram todas as imagens! \n");
     }
 
+    //ILUMINAÇÃO E TRANSFORMAÇÕES
 	
     Inicializa();
+    
+    //CALLBACKS
+    //DESENHO DAS PRIMITIVAS
+
     glutDisplayFunc(display);
+
+    //INTERAÇÃO TECLADO
     glutKeyboardFunc(Teclado);
+
+    //TRATAMENTO DAS SETAS
     glutSpecialFunc(Special_Function);
+
+    //MOVE/NAO MOVE A CAMERA
     glutIdleFunc(Move);
+
+    //INTERAÇÃO MOUSE
     glutMouseFunc(MouseClick);
     
    
