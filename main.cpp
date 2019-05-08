@@ -46,24 +46,25 @@ GLint LookZ = 0;
 //---------------------------------------------------------------
 
 
+
 GLint mapa[26][26] = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-                       1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1, 
-                       1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,
-                       1,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,
-                       1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,
-                       1,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,1,
-                       1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,
-                       1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,
+                       1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1, 
+                       1,0,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,
+                       1,0,1,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,
+                       1,0,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,
+                       1,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,1,
+                       1,0,1,0,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,
+                       1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,
                        1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,
                        1,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,1,
-                       1,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,
+                       1,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,
                        1,1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,1, 
                        1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,
-                       1,1,0,0,0,1,0,1,0,1,0,5,0,1,0,0,0,1,0,0,0,1,0,1,0,1,
+                       1,1,0,0,0,1,0,1,0,1,0,9,0,1,0,0,0,1,0,0,0,1,0,1,0,1,
                        1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,0,1,
                        1,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1, 
-                       1,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,
-                       1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,
+                       1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,
+                       1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,
                        1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,
                        1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,0,0,0,1,
                        1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,
@@ -303,7 +304,7 @@ void display(void)
     }
     else if(refTempo >= 3000){
         
-        glClearColor(0.9, 0.6, 0.2, 1.0);
+        glClearColor(1.0, 0.9, 0.8, 0.0);
 
     }else{
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -334,6 +335,7 @@ void display(void)
 
             glutSwapBuffers();
             glFlush();
+            break;
 
         }else
         refTempo = refTempo - 1;
@@ -415,7 +417,7 @@ void display(void)
 
 
         glDisable( GL_TEXTURE_2D );
-
+        
         for(x=0; x < 26; x++)
         {
             for(z=0; z < 26; z++)
@@ -438,7 +440,7 @@ void display(void)
                     int casa = mapa[x][z];
 
                     
-                    if(casa==5) // Desenha o "ceu" no meio da matriz.
+                    if(casa==9) // Desenha o "ceu" no meio da matriz.
                     {
                        DesenhaEsfera(2850.0,3,3);
 
@@ -479,11 +481,12 @@ glShadeModel(GL_SMOOTH); //especifica a técnica de colorização
 	// Define a concentracao do brilho
 	glMateriali(GL_FRONT,GL_SHININESS,valor_especular_material);
 
-glLightfv(GL_LIGHT0, GL_POSITION, posicao_fonte_de_luz);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_branca);
-glLightfv(GL_LIGHT0, GL_SPECULAR, luz_branca);
-glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 
+    glLightfv(GL_LIGHT0, GL_POSITION, posicao_fonte_de_luz);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_branca);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, luz_branca);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lmodel_ambient);
 
 glEnable(GL_LIGHTING); //liga a iluminação
 glEnable(GL_LIGHT0);
@@ -674,7 +677,7 @@ int main(int argc, char **argv)
     porta = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/porta.bmp", 900, 600); // Carrega terceira textura (Porta)
     ceutarde = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu.bmp", 8000, 2000); // Carrega terceira textura (Porta)
     menu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/menulabirinto.bmp", 615, 300); // Carrega terceira textura (Porta)
-    ceunoite = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceu3.bmp", 6000, 5000);
+    ceunoite = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceunoite3.bmp", 3888, 2592);
     ganhou = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ganhou.bmp", 4000, 2200);
     perdeu = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/perdeu.bmp", 480, 360);
     ceumanha = CarregarTextura( "/home/augusto/Downloads/ProjetoLabirinto/obj/ceumanha2.bmp", 300, 300);
