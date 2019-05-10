@@ -1,2 +1,0 @@
-# Aleat-rio
-# ProjetoAndrei
